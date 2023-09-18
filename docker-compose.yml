@@ -5,6 +5,6 @@ services:
     container_name: argovis3D
     command: tail -f /dev/null
     volumes:
-      - ./src/tools:/argovis3D/tools
-      - /data/argo:/data/argo
+      - ./tools:/argovis3D/tools
+      - /data:/data
     working_dir: /argovis3D/tools

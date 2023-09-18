@@ -183,7 +183,7 @@ def plotly_argo_scatter(platform, sensor, sensor_df):
     Modified:   2020-08-24
     Notes: Working on migrating settings into config file
     """
-    logging.info('plotly_argo_scatter(%s, %s)' % (platform, sensor))
+    logging.warning('plotly_argo_scatter(%s, %s)' % (platform, sensor))
     # Public names for sensors
     if sensor == 'temp':
         public_name = 'Water Temperature'
@@ -517,8 +517,8 @@ def build_argo_plots(platform):
             argo_plot_sensor(platform, slim_df, sensor)
             argo_plot_last_profile(platform, last_profile, sensor)
             #logging.info('Generating 3D plot for %s %s' % (platform, sensor))
-            # 2023-09-06 disabled temporarily by rdc
-            #plotly_argo_scatter(platform, sensor, slim_df)
+            # 2023-09-18 restored by rdc
+            plotly_argo_scatter(platform, sensor, slim_df)
         surface_marker = argo_surface_marker(platform, slim_df)
         return(FeatureCollection(surface_marker))
 
