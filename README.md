@@ -3,14 +3,9 @@
 
 ## What it does
 
-* Built as Docker Stack with three containers
-* Retrieves binary and ascii vehicle data from vehicle servers
-* Processes binary and ascii data and creates feature collections
-* Creates plots for physical and biological sensors
-* Provides multiple overlays for piloting
-* Provides WindyTY animated loop current as landing page
-* Can handle Slocum Gliders, WaveGliders and NavOcean sailing vessels
-* Uses John Kerfoot's gncutils to make GDAC-compliant NetCDF files
+* Built as Docker Stack
+* 3D plotting of Argo float data
+* 3D plotting of Slocum and Seaglider data (rdc)
 * Rules the universe
 
 ## Feedback
@@ -34,9 +29,3 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
-# gandalf-docker
-# gandalf
-# gandalf
-# gandalf
-# gandalf
-# argovis3D
