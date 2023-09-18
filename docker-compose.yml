@@ -1,0 +1,10 @@
+version: "3.2"
+services:  
+  tools:
+    image: gandalf
+    container_name: argovis3D
+    command: tail -f /dev/null
+    volumes:
+      - ./src/tools:/argovis3D/tools
+      - /data/argo:/data/argo
+    working_dir: /argovis3D/tools
