@@ -38,6 +38,10 @@ using_multiprocess = True
 dataDays = 30
 numProcesses = 8
 date_cutoff = 21
+
+INTERVAL = 20
+# INTERVAL = None
+
 # END GLOBALS
 
 
@@ -167,6 +171,10 @@ def make_argo_fig(platform, sensor, sensor_df):
     if sensor == 'psal':
         logging.debug('make_argo_fig(): Using haline for color map')
         cmap = 'haline'
+
+    if INTERVAL is not None:
+        sensor_df = downsample_groups(sensor_df, 'date', 'z', INTERVAL)
+
     colors = sensor_df[sensor]
     fig = px.scatter_3d(sensor_df, y='date', x='date',
                         z='z', color=colors, labels={
@@ -521,6 +529,46 @@ def build_argo_plots(platform):
             plotly_argo_scatter(platform, sensor, slim_df)
         surface_marker = argo_surface_marker(platform, slim_df)
         return(FeatureCollection(surface_marker))
+
+
+def downsample_groups(df_origin, group_col, z_col, interval):
+    processed_groups = []
+
+    df = df_origin.copy()
+    df[z_col] = df[z_col] * -1  # need positive values to do interpolate
+    sensors = [col for col in df.columns if col in ['temp', 'psal', 'pres']]
+
+    for group, group_df in df.groupby(group_col):
+        # Sort the group by the 'z' column
+        group_df = group_df.sort_values(by=z_col)
+
+        # Interpolate to regular intervals
+        z_min = group_df[z_col].min()
+        z_max = group_df[z_col].max()
+
+        start = (z_min // interval + 1) * interval
+        end = (z_max // interval + 1) * interval
+
+        new_z_values = np.arange(start, end, interval)
+        new_z_values = np.insert(new_z_values, 0, z_min)
+        new_z_values = np.append(new_z_values, z_max)
+
+        interpolated_df = pd.DataFrame({z_col: new_z_values})
+        for sensor in sensors:
+            interpolated_df[sensor] = np.interp(new_z_values, group_df[z_col], group_df[sensor])
+
+        # print('interpolated_df', interpolated_df)
+        # print()
+        # Assign other columns (e.g., assign the group column to the interpolated DataFrame)
+        interpolated_df[group_col] = group
+        processed_groups.append(interpolated_df.reset_index())
+
+    # Concatenate the processed groups into a single DataFrame
+    downsampled_df = pd.concat(processed_groups).reset_index(drop=True)
+
+    downsampled_df[z_col] = downsampled_df[z_col] * -1
+
+    return downsampled_df
 
 
 def argo_process():
