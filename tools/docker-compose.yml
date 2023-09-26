@@ -8,4 +8,4 @@ services:
     ports:
       - "8088:80"
     volumes:
-      - ../data/gandalf/argo/plots:/usr/share/nginx/html
+      - /data/gandalf/argo/plots:/usr/share/nginx/html
