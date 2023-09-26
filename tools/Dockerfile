@@ -2,7 +2,7 @@
 
 FROM nginx:latest
 
-COPY /data/gandalf/argo/plots /usr/share/nginx/html
+#COPY /data/gandalf/argo/plots /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -1,7 +1,11 @@
-version: '1'
+version: "3.2"
 
 services:
-  web:
-    build: .
+  nginx_server:
+    image: nginx:latest
+    container_name: nginx_container
+#    build: .
     ports:
       - "8088:80"
+    volumes:
+      - ../data/gandalf/argo/plots:/usr/share/nginx/html
