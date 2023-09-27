@@ -225,7 +225,7 @@ def plotly_argo_scatter(platform, sensor, sensor_df):
     root_dir = ROOT_DIR + '/data/gandalf/argo/plots'
     plot_file = "%s/%s_%s3D.html" % (root_dir, platform, sensor)
     logging.debug('plotly_ARGO_scatter(): Saving %s' % plot_file)
-    fig.write_html(plot_file, full_html=False, config={'displaylogo': False})
+    fig.write_html(plot_file)  # , full_html=False, config={'displaylogo': False}
     logging.debug("-------------------------------------------------------------")
 
 
