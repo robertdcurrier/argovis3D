@@ -20,6 +20,7 @@ import pandas as pd
 import seawater as sw
 import plotly.express as px
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 import datetime
 from datetime import date
 from datetime import timedelta
@@ -53,13 +54,13 @@ def register_cmocean():
     Notes: Registers Kristin's oceanographic color map
     """
     logging.debug('register_cmocean(): Installing cmocean color maps')
-    plt.register_cmap(name='thermal', cmap=cmocean.cm.thermal)
-    plt.register_cmap(name='haline', cmap=cmocean.cm.haline)
-    plt.register_cmap(name='algae', cmap=cmocean.cm.algae)
-    plt.register_cmap(name='matter', cmap=cmocean.cm.matter)
-    plt.register_cmap(name='dense', cmap=cmocean.cm.dense)
-    plt.register_cmap(name='oxy', cmap=cmocean.cm.oxy)
-    plt.register_cmap(name='speed', cmap=cmocean.cm.speed)
+    colormaps.register(name='thermal', cmap=cmocean.cm.thermal)
+    colormaps.register(name='haline', cmap=cmocean.cm.haline)
+    colormaps.register(name='algae', cmap=cmocean.cm.algae)
+    colormaps.register(name='matter', cmap=cmocean.cm.matter)
+    colormaps.register(name='dense', cmap=cmocean.cm.dense)
+    colormaps.register(name='oxy', cmap=cmocean.cm.oxy)
+    colormaps.register(name='speed', cmap=cmocean.cm.speed)
 
 
 def cmocean_to_plotly(cmap, pl_entries):
@@ -173,10 +174,11 @@ def make_argo_fig(platform, sensor, sensor_df):
         cmap = 'haline'
 
     if INTERVAL is not None:
-        if np.issubdtype(sensor_df[sensor].dtype, np.number):
-            sensor_df = downsample_groups(sensor_df, 'date', 'z', INTERVAL, sensor)
+        sensor_df[sensor] = sensor_df[sensor].astype('float')
+        # print('np.issubdtype(sensor_df[sensor].dtype, np.number)', np.issubdtype(sensor_df[sensor].dtype, np.number))
+        sensor_df = downsample_groups(sensor_df, 'date', 'z', INTERVAL, sensor)
 
-    colors = sensor_df[sensor]
+    colors = sensor_df[sensor].astype('float')
     fig = px.scatter_3d(sensor_df, y='date', x='date',
                         z='z', color=colors, labels={
                             "z": "Depth(m)",
