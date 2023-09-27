@@ -173,7 +173,8 @@ def make_argo_fig(platform, sensor, sensor_df):
         cmap = 'haline'
 
     if INTERVAL is not None:
-        sensor_df = downsample_groups(sensor_df, 'date', 'z', INTERVAL)
+        if np.issubdtype(sensor_df[sensor].dtype, np.number):
+            sensor_df = downsample_groups(sensor_df, 'date', 'z', INTERVAL, sensor)
 
     colors = sensor_df[sensor]
     fig = px.scatter_3d(sensor_df, y='date', x='date',
@@ -531,12 +532,12 @@ def build_argo_plots(platform):
         return(FeatureCollection(surface_marker))
 
 
-def downsample_groups(df_origin, group_col, z_col, interval):
+def downsample_groups(df_origin, group_col, z_col, interval, sensor):
     processed_groups = []
 
     df = df_origin.copy()
     df[z_col] = df[z_col] * -1  # need positive values to do interpolate
-    sensors = [col for col in df.columns if col in ['temp', 'psal', 'pres']]
+    # sensors = [col for col in df.columns if col in ['temp', 'psal', 'pres']]
 
     for group, group_df in df.groupby(group_col):
         # Sort the group by the 'z' column
@@ -549,13 +550,21 @@ def downsample_groups(df_origin, group_col, z_col, interval):
         start = (z_min // interval + 1) * interval
         end = (z_max // interval + 1) * interval
 
-        new_z_values = np.arange(start, end, interval).astype('float')
-        new_z_values = np.insert(new_z_values, 0, z_min).astype('float')
-        new_z_values = np.append(new_z_values, z_max).astype('float')
+        new_z_values = np.arange(start, end, interval)
+        new_z_values = np.insert(new_z_values, 0, z_min)
+        new_z_values = np.append(new_z_values, z_max)
 
         interpolated_df = pd.DataFrame({z_col: new_z_values})
-        for sensor in sensors:
+
+        # for sensor in sensors:
+        try:
             interpolated_df[sensor] = np.interp(new_z_values, group_df[z_col], group_df[sensor])
+        except Exception as e:
+            print('there is an error', e)
+            print('new_z_values', new_z_values)
+            print('group_df[z_col]', group_df[z_col])
+            print('group_df[sensor]', group_df[sensor])
+            raise e
 
         # print('interpolated_df', interpolated_df)
         # print()
