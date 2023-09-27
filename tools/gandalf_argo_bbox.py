@@ -222,7 +222,7 @@ def plotly_argo_scatter(platform, sensor, sensor_df):
     root_dir = ROOT_DIR + '/data/gandalf/argo/plots'
     plot_file = "%s/%s_%s3D.html" % (root_dir, platform, sensor)
     logging.debug('plotly_ARGO_scatter(): Saving %s' % plot_file)
-    fig.write_html(plot_file)
+    fig.write_html(plot_file, full_html=False, config={'displaylogo': False})
     logging.debug("-------------------------------------------------------------")
 
 
@@ -549,9 +549,9 @@ def downsample_groups(df_origin, group_col, z_col, interval):
         start = (z_min // interval + 1) * interval
         end = (z_max // interval + 1) * interval
 
-        new_z_values = np.arange(start, end, interval)
-        new_z_values = np.insert(new_z_values, 0, z_min)
-        new_z_values = np.append(new_z_values, z_max)
+        new_z_values = np.arange(start, end, interval).astype('float')
+        new_z_values = np.insert(new_z_values, 0, z_min).astype('float')
+        new_z_values = np.append(new_z_values, z_max).astype('float')
 
         interpolated_df = pd.DataFrame({z_col: new_z_values})
         for sensor in sensors:
