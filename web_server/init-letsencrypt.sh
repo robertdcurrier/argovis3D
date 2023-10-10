@@ -11,6 +11,14 @@ else
   echo "No .env file found, using defaults."
 fi
 
+DIR="data/nginx/"
+# Check if the directory exists. If not, create the directory structure.
+if [ -d "$DIR" ]; then
+    echo "Directory $DIR already exists!"
+else
+    mkdir -p "$DIR"
+    echo "Directory $DIR created!"
+fi
 
 domains_env="${NGINX_DOMAIN_LIST:-"example.org www.example.org"}"
 IFS=' ' read -r -a domains <<< "$domains_env"
