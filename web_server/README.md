@@ -20,7 +20,6 @@ application.
    - NGINX_PROXY_PASS - [REQUIRED] the url to route all incoming requests on ports 80, 443; for example "http://localhost:8080" to forward all incoming to localhost:8080; defaults to "http://example.org"
    - LETSENCRYPT_EMAIL - [OPTIONAL] the email id to use for LetsEncrypt registration; defaults to ""
    - LETSENCRYPT_STAGING - [OPTIONAL] Set to 1 if you're testing your setup to avoid hitting request limits; defaults to 0
-   - STATIC_DIRECTORY - [REQUIRED] the directory of static files
 2. Make sure the script has execute permissions:
 
         chmod +x init-letsencrypt.sh
