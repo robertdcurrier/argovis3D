@@ -22,10 +22,16 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
+    root {STATIC_DIRECTORY};  # This points to your static content
+
     location / {
-        proxy_pass  ${NGINX_PROXY_PASS};
-        proxy_set_header    Host                $http_host;
-        proxy_set_header    X-Real-IP           $remote_addr;
-        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        try_files $uri $uri/ =404;  # This will try to serve static content and return a 404 error if not found
     }
+
+#    location / {
+#        proxy_pass  ${NGINX_PROXY_PASS};
+#        proxy_set_header    Host                $http_host;
+#        proxy_set_header    X-Real-IP           $remote_addr;
+#        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+#    }
 }
