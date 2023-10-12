@@ -1,6 +1,16 @@
 version: "3.2"
 
 services:
+  flask:
+    build: ./web/
+    restart: unless-stopped
+    command: >
+      sh -c "uwsgi --ini mysite.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+#      - web_static:/code/static/
+#      - web_static:/var/www/mysite/assets/
+
   nginx:
     image: nginx:latest
     restart: unless-stopped
@@ -12,15 +22,23 @@ services:
     volumes:
       - /data/gandalf/argo:/usr/share/nginx/html
 #      - /Users/xiaoqi/PycharmProjects/data/gandalf/argo:/usr/share/nginx/html
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./nginx/data/nginx:/etc/nginx/conf.d
+      - ./nginx/data/certbot/conf:/etc/letsencrypt
+      - ./nginx/data/certbot/www:/var/www/certbot
+      - uwsgi_data:/tmp/uwsgi/
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - flask
+
   certbot:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./nginx/data/certbot/conf:/etc/letsencrypt
+      - ./nginx/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
+
+volumes:
+  uwsgi_data:
+#  web_static:
