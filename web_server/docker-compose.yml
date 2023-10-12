@@ -4,12 +4,9 @@ services:
   flask:
     build: ./web/
     restart: unless-stopped
-    command: >
-      sh -c "uwsgi --ini mysite.uwsgi.ini"
+    command: "uwsgi --ini mysite.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
-#      - web_static:/code/static/
-#      - web_static:/var/www/mysite/assets/
 
   nginx:
     image: nginx:latest
@@ -20,8 +17,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /data/gandalf/argo:/usr/share/nginx/html
-#      - /Users/xiaoqi/PycharmProjects/data/gandalf/argo:/usr/share/nginx/html
+      - /data/gandalf/argo:/usr/share/nginx/html:ro
       - ./nginx/data/nginx:/etc/nginx/conf.d
       - ./nginx/data/certbot/conf:/etc/letsencrypt
       - ./nginx/data/certbot/www:/var/www/certbot
@@ -41,4 +37,3 @@ services:
 
 volumes:
   uwsgi_data:
-#  web_static:

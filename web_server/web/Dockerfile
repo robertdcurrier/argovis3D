@@ -9,6 +9,3 @@ WORKDIR /app
 COPY . /app
 
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Specify the command to run on container start
-#CMD ["uwsgi", "--ini", "myapp.ini"]
