@@ -14,20 +14,28 @@ application.
 
 ## Installation
 
-1. Modify .env file:
+1. Make an .env file based on the .env_template file. 
+
+        cp nginx/.env_template nginx/.env
+
+2. Modify .env file:
+
+        vim nginx/.env
+
    - NGINX_DOMAIN_LIST - [REQUIRED] the list of domains for nginx (also used by letsencrypt); each domain name should be separated by a space; the first domain name will be taken as the primary domain unless NGINX_PRIMARY_DOMAIN env variable is also provided; defaults to "example.org www.example.org"
    - NGINX_PRIMARY_DOMAIN - [OPTIONAL] the primary domain name to use for certificate registration; defaults to "example.org"
    - NGINX_PROXY_PASS - [REQUIRED] the url to route all incoming requests on ports 80, 443; for example "http://localhost:8080" to forward all incoming to localhost:8080; defaults to "http://example.org"
    - LETSENCRYPT_EMAIL - [OPTIONAL] the email id to use for LetsEncrypt registration; defaults to ""
    - LETSENCRYPT_STAGING - [OPTIONAL] Set to 1 if you're testing your setup to avoid hitting request limits; defaults to 0
-2. Make sure the script has execute permissions:
 
-        chmod +x init-letsencrypt.sh
+3. Make sure the script has execute permissions:
 
-3. Run the init script:
+        chmod +x nginx/init-letsencrypt.sh
 
-        ./init-letsencrypt.sh
+4. Run the init script:
 
-4. Run the server:
+        ./nginx/init-letsencrypt.sh
+
+5. Run the server:
 
         docker compose up
