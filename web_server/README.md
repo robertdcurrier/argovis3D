@@ -13,14 +13,14 @@ This is useful when you need to set up nginx as a reverse proxy for an
 application.
 
 ## Installation
+1. Go into the nginx folder, and make an .env file based on the .env_template file. 
 
-1. Make an .env file based on the .env_template file. 
-
-        cp nginx/.env_template nginx/.env
+        cd nginx/
+        cp .env_template .env
 
 2. Modify .env file:
 
-        vim nginx/.env
+        vim .env
 
    - NGINX_DOMAIN_LIST - [REQUIRED] the list of domains for nginx (also used by letsencrypt); each domain name should be separated by a space; the first domain name will be taken as the primary domain unless NGINX_PRIMARY_DOMAIN env variable is also provided; defaults to "example.org www.example.org"
    - NGINX_PRIMARY_DOMAIN - [OPTIONAL] the primary domain name to use for certificate registration; defaults to "example.org"
@@ -30,12 +30,13 @@ application.
 
 3. Make sure the script has execute permissions:
 
-        chmod +x nginx/init-letsencrypt.sh
+        chmod +x init-letsencrypt.sh
 
 4. Run the init script:
 
-        ./nginx/init-letsencrypt.sh
+        ./init-letsencrypt.sh
 
-5. Run the server:
+5. Go back to web_server folder, and run the docker compose command:
 
+        cd ..
         docker compose up

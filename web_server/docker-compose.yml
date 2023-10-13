@@ -4,6 +4,7 @@ services:
   flask:
     build: ./web/
     restart: unless-stopped
+    container_name: flask_container
     command: "uwsgi --ini mysite.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
@@ -28,6 +29,7 @@ services:
 
   certbot:
     image: certbot/certbot
+    container_name: certbot_container
     restart: unless-stopped
     volumes:
       - ./nginx/data/certbot/conf:/etc/letsencrypt
