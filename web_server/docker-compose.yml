@@ -8,6 +8,7 @@ services:
     command: "uwsgi --ini mysite.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
+      - ./log/uwsgi/:/var/log/uwsgi/
 
   nginx:
     image: nginx:latest
@@ -23,6 +24,7 @@ services:
       - ./nginx/data/certbot/conf:/etc/letsencrypt
       - ./nginx/data/certbot/www:/var/www/certbot
       - uwsgi_data:/tmp/uwsgi/
+      - ./log/nginx/:/var/log/nginx/
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - flask

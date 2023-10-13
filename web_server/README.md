@@ -4,6 +4,7 @@
 ## Reference:
 * https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
 * https://github.com/rappo-ai/nginx-certbot/tree/master
+* https://blog.devgenius.io/how-to-dockerize-a-production-ready-django-application-django-nginx-uwsgi-a908d3e4d8f8
 
 
 `init-letsencrypt.sh` fetches and ensures the renewal of a Let’s
