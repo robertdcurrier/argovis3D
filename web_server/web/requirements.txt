@@ -1,2 +1,8 @@
 Flask==2.3.3
 uwsgi==2.0.22
+
+Flask-SocketIO
+Flask-Login==0.6.2
+Flask-Session==0.4.0
+
+eventlet
