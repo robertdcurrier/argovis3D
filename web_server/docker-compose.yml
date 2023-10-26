@@ -5,7 +5,7 @@ services:
     build: ./web/
     restart: unless-stopped
     container_name: flask_container
-    command: "python ./web/websocket_example/app.py && uwsgi --ini mysite.uwsgi.ini"
+    command: "python websocket_example/app.py && uwsgi --ini mysite.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - ./log/uwsgi/:/var/log/uwsgi/
