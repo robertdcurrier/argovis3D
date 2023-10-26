@@ -5,10 +5,12 @@ services:
     build: ./web/
     restart: unless-stopped
     container_name: flask_container
-    command: "uwsgi --ini mysite.uwsgi.ini"
+    command: "python ./web/websocket_example/app.py && uwsgi --ini mysite.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
       - ./log/uwsgi/:/var/log/uwsgi/
+    networks:
+      - backend
 
   nginx:
     image: nginx:latest
@@ -28,6 +30,8 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - flask
+    networks:
+      - backend
 
   certbot:
     image: certbot/certbot
@@ -41,3 +45,6 @@ services:
 
 volumes:
   uwsgi_data:
+
+networks:
+  backend:
