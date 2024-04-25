@@ -1,13 +1,15 @@
 import datetime
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def hello():
-    now = str(datetime.datetime.now())
-    return f"<h1 style='color:blue'>Hello There! Time now: {now}</h1>"
+    return render_template('index.html')
+
+    # now = str(datetime.datetime.now())
+    # return f"<h1 style='color:blue'>Hello There! Time now: {now}</h1>"
 
 
 @app.route("/error/")

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+    <title>GCOOS GANDALF</title>
+    <head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="cache-control" content="max-age=0">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 11:00:00 GMT">
+<meta http-equiv="pragma" content="no-cache">
+
+<title>GANDALF</title>
+<!-- Fonts and favicon -->
+<link rel="icon" href="./static/images/favicon.png" type="image/png"/>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600" rel="stylesheet" type="text/css"/>
+<!-- CDN CSS files -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/leaflet.coordinates@0.1.5/dist/Leaflet.Coordinates-0.1.5.css"/>
+<!-- Local stylesheets -->
+<link href="./static/css/gandalf.css" rel="stylesheet" type="text/css"/>
+<link href="./static/css/leaflet-velocity.css" rel="stylesheet" type="text/css"/>
+<link href="./static/css/responsive.css" rel="stylesheet" type="text/css"/>
+<link href="./static/css/LeafletStyleSheet.css" rel="stylesheet" type="text/css"/>
+<!-- CDN JS FILES -->
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+crossorigin=""></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.coordinates@0.1.5/dist/Leaflet.Coordinates-0.1.5.src.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/js/all.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<!-- Local js concatted, obfuscated and minimized.  Version number applied to force dist.min.js to always reload-->
+<script type="text/javascript" src="./static/js/dist/build.min.js"></script><!-- for displaying the map-->
+<script type="text/javascript" src="./static/js/dist/leaflet-velocity.js"></script><!-- for displaying currents flow-->
+<script type="text/javascript" src="./static/js/dist/leaflet.rotatedMarker.js"></script>
+<!-- Leaflet-KMZ -->
+<script src="https://unpkg.com/leaflet-kmz@latest/dist/leaflet-kmz.js"></script>
+<!-- PruneCluster -->
+<!--<script type="text/javascript" src="./static/js/PruneCluster.js"></script>-->
+<!-- Google Analytics -->
+<script>
+    //  track and report website traffic
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-64832661-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</head>
+    <body>
+        
+
+  <nav id="nav_bar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="http://products.gcoos.org">
+      <img src='./static/images/gcoos-logo.png'></>
+    </a>
+  </div>
+  <div class="collapse navbar-collapse" id="myNavBar">
+    <ul id="navbar_nav" class="nav navbar-nav">
+      <li><a href="https://gandalf.gcoos.org/">Deployments</a></li>
+      <li><a href="https://gandalf.gcoos.org/portal">Data Portal</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">About
+          <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://gandalf.gcoos.org/about/gandalf">GANDALF</a></li>
+          <li><a href="https://gandalf.gcoos.org/about/navigation">Navigation</a></li>
+          <li><a href="https://gandalf.gcoos.org/about/models">Models</a></li>
+          <li><a href="https://gandalf.gcoos.org/about/satellites">Satellites and Imagery</a></li>
+        </ul>
+      </li>
+      <li><a href="https://gandalf.gcoos.org/team">Team</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">AIS
+          <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#" id="ais-fleet">Research Fleet</a></li>
+        </ul>
+      </li>
+      
+      <li><a href="#" id="dash-button"><i class="fas fa-plane"></i>
+          Dashboard</a></li>
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+       
+         <li><a href="/login">Sign In</a></li>
+       </ul>
+       
+     </div>
+ </nav>
+    <div id='new-dash'>
+      <table class='table'>
+    <th class='th_dash'>P.I.</th>
+    <th class='th_dash'>Vehicle Name</th>
+    <th class='th_dash'>Type</th>
+    <th class='th_dash'>Status</th>
+    <th class='th_dash'>Data Source</th>
+    <th class='th_dash'>Operator</th>
+    <th class='th_dash'>Project</th>
+    <th class='th_dash'>Deployed</th>
+    <th class='th_dash'>Days Wet</th>
+    <th class='th_dash'>Last Report</th>
+    <th class='th_dash'>Teleport</th>
+    <th class='th_dash'>Science Plots</th>
+    <th class='th_dash'>KMZ</th>
+    
+    
+    <tr>
+      <td class='td_dash'>Langan J</td>
+      <td class='td_dash'>mote-dora</td>
+      <td class='td_dash'>slocum</td>
+      <td class='td_dash'>deployed</td>
+      <td class='td_dash'>TWR Dockserver</td>
+      <td class='td_dash'>Mote</td>
+      <td class='td_dash'>FWRI Gulf Survey</td>
+      <td class='td_dash'>2024-04-18 00:00</td>
+      <td class='td_dash'>6</td>
+      <td class='td_good_date'>2024-04-24 12:07 UTC</td>
+      <td class='td_dash'><i class="fas fa-search"
+        onclick="teleport('26.5256','-83.4318')"
+      </i></td>
+      <td class='td_dash'>
+        <i class="fas fa-chart-bar"
+          onclick="deployPlots('mote-dora')"
+        </i></td>
+      <td class='td_dash'><a href=/data/gandalf/deployments/mote/mote-dora/kmz/mote-dora.kml>
+        <i class="fas fa-globe"></i></td>
+    </tr>
+    
+    <tr>
+      <td class='td_dash'>GMOG</td>
+      <td class='td_dash'>sg652</td>
+      <td class='td_dash'>seaglider</td>
+      <td class='td_dash'>Deployed</td>
+      <td class='td_dash'>Cicese</td>
+      <td class='td_dash'>CICESE</td>
+      <td class='td_dash'>GulfCORES</td>
+      <td class='td_dash'>2024-01-19 00:00</td>
+      <td class='td_dash'>96</td>
+      <td class='td_good_date'>2024-04-24 07:30 UTC</td>
+      <td class='td_dash'><i class="fas fa-search"
+        onclick="teleport('18.741','-85.816')"
+      </i></td>
+      <td class='td_dash'>
+        <i class="fas fa-chart-bar"
+          onclick="deployPlots('sg652')"
+        </i></td>
+      <td class='td_dash'><a href=>
+        <i class="fas fa-globe"></i></td>
+    </tr>
+    
+    <tr>
+      <td class='td_dash'>DiMarco, Mahmud, Miles, Glen</td>
+      <td class='td_dash'>stommel</td>
+      <td class='td_dash'>slocum</td>
+      <td class='td_dash'>deployed</td>
+      <td class='td_dash'>IOOS GDAC</td>
+      <td class='td_dash'>TAMU GERG</td>
+      <td class='td_dash'>GulfCORES</td>
+      <td class='td_dash'>2024-05-20 15:38</td>
+      <td class='td_dash'>87</td>
+      <td class='td_good_date'>2024-04-23 10:56 UTC</td>
+      <td class='td_dash'><i class="fas fa-search"
+        onclick="teleport('19.3662','-87.1143')"
+      </i></td>
+      <td class='td_dash'>
+        <i class="fas fa-chart-bar"
+          onclick="deployPlots('stommel')"
+        </i></td>
+      <td class='td_dash'><a href=>
+        <i class="fas fa-globe"></i></td>
+    </tr>
+    
+    <tr>
+      <td class='td_dash'>Lembke C</td>
+      <td class='td_dash'>usf-jaialai</td>
+      <td class='td_dash'>slocum</td>
+      <td class='td_dash'>Deployed</td>
+      <td class='td_dash'>USF Dockserver</td>
+      <td class='td_dash'>USF</td>
+      <td class='td_dash'>State of Florida Red Tide Co-Op</td>
+      <td class='td_dash'>2024-04-15 00:00</td>
+      <td class='td_dash'>9</td>
+      <td class='td_good_date'>2024-04-24 06:04 UTC</td>
+      <td class='td_dash'><i class="fas fa-search"
+        onclick="teleport('27.8357','-84.5545')"
+      </i></td>
+      <td class='td_dash'>
+        <i class="fas fa-chart-bar"
+          onclick="deployPlots('usf-jaialai')"
+        </i></td>
+      <td class='td_dash'><a href=https://gandalf.gcoos.org:/data/gandalf/deployments/usf/usf-jaialai/kmz/usf-jaialai.kml>
+        <i class="fas fa-globe"></i></td>
+    </tr>
+    
+    
+</table>
+    </div>
+<div id='gLayers'>
+  <ul class="list-group">
+    <!--
+2021-09-28
+Began work on building collapsing layer menu with categories. Have been
+tinkering with this for some time but really need to get serious and
+make this work. We're getting far too many layers to display at one time.
+  -->
+  <div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse2">Navigation</a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+        <ul class="list-group">
+	<li class="list-group-item">Depths
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.noaaDepthsLayer,this.value)">
+            </input>
+        </li>
+	<li class="list-group-item">Buoys and Beacons
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.noaaBuoysLayer,this.value)">
+            </input>
+        </li>
+  <li class="list-group-item">Platforms
+          <input  type='range' min='0' max='1' step='.01' value='0'
+            onmousemove="layerOpacity(layersNS.oceanPlatformsLayer,this.value)">
+          </input>
+        </li>
+        <li class="list-group-item">World EEZ
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.eezLayer,this.value)">
+            </input>
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse3">Models</a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <ul class="list-group">
+          <li class="list-group-item">RTOFS Salinity
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.rtofsSalinityLayer,this.value)">
+            </input>
+          </li>
+          <li class="list-group-item">RTOFS Salinity Depth
+            <div id='salDepthWindow'></div>
+            <input  type='range' min='0' max='2000' step='100' value='0' id='rtofsSalDepth'
+              onchange="salLayerDepth(this.value)">
+            </input>
+          </li>
+          <li class="list-group-item">RTOFS Velocity
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.rtofsVelocityLayer,this.value)">
+            </input>
+          </li>
+          <li class="list-group-item">RTOFS Velocity Depth
+            <div id='velDepthWindow'></div>
+            <input  type='range' min='0' max='2000' step='100' value='0' id='rtofsVelDepth'
+              onchange="velLayerDepth(this.value)">
+            </input>
+          </li>
+          <li class="list-group-item">RTOFS SSH
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.rtofsSSHLayer,this.value)">
+            </input>
+          </li>
+	  <li class="list-group-item">Rutgers Depth Avg Currents
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.rutgersDACLayer,this.value)">
+            </input>
+          </li>
+          <li class="list-group-item">AOML Geostrophic
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.geostrophicLayer,this.value)">
+            </input>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>
+
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse5">Satellite and Radar</a>
+      </h4>
+    </div>
+    <div id="collapse5" class="panel-collapse collapse">
+      <ul class="list-group">
+        <li class="list-group-item">HF Radar 6km
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.hfrLayer6K,this.value)">
+            </input>
+        </li>
+        <li class="list-group-item">NWS NEXRAD
+          <input type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.nwsNexrad,this.value)">
+          </input>
+        </li>
+         <li class="list-group-item" id='lsuSST'>LSU GOES-16 ABI SST
+            <input  type='range' min='0' max='1' step='.01' value='0'
+              onmousemove="layerOpacity(layersNS.lsuSSTLayer,this.value)">
+            </input>
+          </li>
+        <li class="list-group-item">MODIS SST
+           <input type='range' min='0' max='1' step='.01' value='0'
+             onmousemove="layerOpacity(SSTLayer,this.value)">
+           </input>
+         </li>
+         <li class="list-group-item">MODIS Chlorophyll
+           <input type='range' min='0' max='1' step='.01' value='0'
+             onmousemove="layerOpacity(gibsMODIS1,this.value);
+             layerOpacity(gibsMODIS2,this.value);layerOpacity(gibsMODIS3,this.value)">
+         </input></li>
+      </ul>
+    </div>
+  </div>
+</div>
+   </ul>
+</div>
+
+<div id='plotWrapper'> <!-- Science Plots and Model Comparisons for each glider-->
+  <img src='./static/images/red_close.png' id='closePlot'></img>
+</div>
+<div id='plotWrapper3D'>
+  <img src='./static/images/red_close.png' id='closePlot3D'></img>
+  <div id='plotLoadingSpinner'><img src='./static/images/spinner.gif'></div>
+</div>
+
+<!-- embed an AIS (Automatic Identification System) map from VesselFinder into a web page. This map is typically used to display real-time information about ship positions and movements.-->
+<div id='ais_map'>
+    <script>
+        var latitude="26.0";
+        var longitude="-88.0";
+        var zoom="6";
+        var fleet="5c1d509d5199afbbabc42c87c8a8ecc3";
+        var fleet_name="Default Fleet";
+      </script>
+  <script type="text/javascript" src="https://www.vesselfinder.com/aismap.js"></script>
+</div>
+
+<div id='map'>
+  <div id='layerControl'>
+    <img src='./static/images/layers_small.png' id='layerControl'></img>
+  </div>
+
+  <script>
+      var map_center = [37, -96];
+      var map_zoom = 4;
+      initGANDALF(map_center, map_zoom);
+  </script>
+
+  <div id='wmsLegend'></div>
+</div>
+
+
+    </body>
+</html>
